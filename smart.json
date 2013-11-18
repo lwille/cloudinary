@@ -1,0 +1,8 @@
+{
+  "name": "cloudinary",
+  "description": "Cloudinary JavaScript library",
+  "homepage": "https://github.com/lwille/cloudinary",
+  "author": "Leonhardt Wille (https://github.com/lwille)",
+  "version": "1.0.11",
+  "git": "https://github.com/lwille/cloudinary.git"
+}
