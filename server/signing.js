@@ -1,37 +1,13 @@
-crypto = Npm.require('crypto');
-
-function api_sign_request(params_to_sign, api_secret) {
-  var k, shasum, to_sign, v;
-  to_sign = _.sortBy((function() {
-    var _results;
-    _results = [];
-    for (k in params_to_sign) {
-      v = params_to_sign[k];
-      if (v != null) {
-        _results.push("" + k + "=" + (build_array(v).join(",")));
-      }
+var cloudinary = Npm.require("cloudinary");
+Meteor.startup(function () {
+  var corsCallback = Meteor.absoluteUrl("packages/cloudinary/client/html/cloudinary_cors.html"),
+  config = cloudinary.config();
+  Meteor.methods({
+    "Cloudinary.getConfig": function () {
+      return cloudinary.cloudinary_js_config();
+    },
+    "Cloudinary.fileUpload": function (field) {
+      return cloudinary.uploader.image_upload_tag(field, {callback: corsCallback});
     }
-    return _results;
-  })(), _.identity).join("&");
-  shasum = crypto.createHash('sha1');
-  shasum.update(to_sign + api_secret);
-  return shasum.digest('hex');
-};
-
-function build_array(arg) {
-  if (arg == null) {
-    return [];
-  } else if (_.isArray(arg)) {
-    return arg;
-  } else {
-    return [arg];
-  }
-};
-
-Meteor.startup(function() {
-	Meteor.methods({
-		signCloudinaryRequest: function(params) {
-			return api_sign_request(params, Meteor.settings.cloudinary.api_secret);
-		}
-	});
+  });
 });
